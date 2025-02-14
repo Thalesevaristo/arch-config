@@ -71,7 +71,7 @@ install_packages() {
         git
         github-cli
         python
-				go
+	go
         rust
     )
 

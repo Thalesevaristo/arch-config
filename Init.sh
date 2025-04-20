@@ -46,23 +46,18 @@ check_root() {
 # Install required packages
 install_packages() {
     log_info "Installing required packages..."
-    pacman -Syu --noconfirm || {
-        log_error "System update failed"
+    pacman -Sy --noconfirm || {
+        log_error "Package database update failed"
+        exit 1
+    }
+    pacman -Su --noconfirm || {
+        log_error "System upgrade failed"
         exit 1
     }
 
     local packages=(
-        sudo
-        nano
-        zsh
-        curl
-        git
-        github-cli
-        python
-	go
-        rust
+        sudo nano zsh curl git github-cli python go rust
     )
-
     pacman -S "${packages[@]}" --noconfirm || {
         log_error "Failed to install packages"
         exit 1
@@ -113,14 +108,9 @@ create_user() {
 
     # Configure WSL default user
     log_info "Configuring WSL defaults..."
-    
-    if ! grep -q "\[boot\]" /etc/wsl.conf; then
-    echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf
-    fi
-    
-    if ! grep -q "\[user\]" /etc/wsl.conf; then
-    echo -e "\n[user]\ndefault=$username" >> /etc/wsl.conf
-    fi
+
+    grep -q "\[boot\]" /etc/wsl.conf || echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf
+    grep -q "\[user\]" /etc/wsl.conf || echo -e "\n[user]\ndefault=$username" >> /etc/wsl.conf
 
     # Setup Zap plugin manager for ZSH
     setup_zsh_for_user "$username"
@@ -185,7 +175,7 @@ EOF
     
     # Install Zap plugin manager for the user
     log_info "Installing Zap plugin manager..."
-    sudo -u "$username" sh -c "$(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1" || {
+    sudo -u "$username" sh -c 'curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh | zsh --branch release-v1' || {
         log_warn "Failed to install Zap plugin manager, the user can install it manually later"
     }
     

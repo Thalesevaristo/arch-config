@@ -112,14 +112,43 @@ create_user() {
     grep -q "\[boot\]" /etc/wsl.conf || echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf
     grep -q "\[user\]" /etc/wsl.conf || echo -e "\n[user]\ndefault=$username" >> /etc/wsl.conf
 
+    # Make Zsh the default shell
+    change_to_zsh "$username"
+    
     # Setup Zap plugin manager for ZSH
     setup_zsh_for_user "$username"
+}
+
+change_to_zsh() {
+    local username=$1
+    local ZSH_SHELL="/bin/zsh"
+
+    # Verifica se o shell existe
+    if ! grep -q "$ZSH_SHELL" /etc/shells; then
+        log_error "$ZSH_SHELL is not a valid shell."
+        exit 1
+    fi
+
+    log_info "Changing default shell for to $ZSH_SHELL"
+    chsh -s "$ZSH_SHELL" "$username"
 }
 
 # Setup ZSH with Zap plugin manager
 setup_zsh_for_user() {
     local username=$1
     local user_home="/home/$username"
+
+    # Install Zap plugin manager for the user
+    log_info "Installing Zap plugin manager..."
+    sudo -u "$username" sh -c 'curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh | zsh --branch release-v1' || {
+        log_warn "Failed to install Zap plugin manager, the user can install it manually later"
+    }
+    
+    # Set proper ownership
+    chown -R "$username:$username" "$user_home/.zshrc"
+    chown -R "$username:$username" "$user_home/.local" 2>/dev/null || true
+    
+    log_info "ZSH with Zap plugin manager has been set up for $username"
     
     log_info "Setting up Zap plugin manager for ZSH..."
     
@@ -172,18 +201,6 @@ plug "reobin/typewritten"
 autoload -Uz compinit
 compinit
 EOF
-    
-    # Install Zap plugin manager for the user
-    log_info "Installing Zap plugin manager..."
-    sudo -u "$username" sh -c 'curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh | zsh --branch release-v1' || {
-        log_warn "Failed to install Zap plugin manager, the user can install it manually later"
-    }
-    
-    # Set proper ownership
-    chown -R "$username:$username" "$user_home/.zshrc"
-    chown -R "$username:$username" "$user_home/.local" 2>/dev/null || true
-    
-    log_info "ZSH with Zap plugin manager has been set up for $username"
 }
 
 # Main function

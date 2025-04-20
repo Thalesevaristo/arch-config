@@ -43,18 +43,6 @@ check_root() {
     fi
 }
 
-# Initialize pacman keys
-init_pacman() {
-    log_info "Initializing pacman keys..."
-    pacman-key --init
-    pacman-key --populate
-    pacman -Sy archlinux-keyring --noconfirm || {
-        log_error "Failed to initialize pacman keys"
-        exit 1
-    }
-    pacman -Su --noconfirm
-}
-
 # Install required packages
 install_packages() {
     log_info "Installing required packages..."
@@ -125,13 +113,87 @@ create_user() {
 
     # Configure WSL default user
     log_info "Configuring WSL defaults..."
-    cat > /etc/wsl.conf << EOF
-[boot]
-systemd=true
+    
+    if ! grep -q "\[boot\]" /etc/wsl.conf; then
+    echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf
+    fi
+    
+    if ! grep -q "\[user\]" /etc/wsl.conf; then
+    echo -e "\n[user]\ndefault=$username" >> /etc/wsl.conf
+    fi
 
-[user]
-default=$username
+    # Setup Zap plugin manager for ZSH
+    setup_zsh_for_user "$username"
+}
+
+# Setup ZSH with Zap plugin manager
+setup_zsh_for_user() {
+    local username=$1
+    local user_home="/home/$username"
+    
+    log_info "Setting up Zap plugin manager for ZSH..."
+    
+    # Create initial .zshrc file
+    cat > "$user_home/.zshrc" << 'EOF'
+# Created by Arch Linux WSL post-installer
+
+# Initialize Zap plugin manager
+[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"
+
+# History configuration
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+setopt sharehistory
+setopt incappendhistory
+
+# Key bindings
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
+
+# Aliases
+alias ls='ls --color=auto'
+alias ll='ls -la'
+alias la='ls -a'
+alias grep='grep --color=auto'
+alias python="python3"
+
+# Path additions
+export PATH="$HOME/.local/bin:$PATH"
+export PATH=$PATH:/usr/local/go/bin
+
+# Theme
+export TYPEWRITTEN_PROMPT_LAYOUT="pure_verbose"
+export TYPEWRITTEN_CURSOR="beam"
+export TYPEWRITTEN_SYMBOL="$"
+export TYPEWRITTEN_RELATIVE_PATH="adaptive"
+export TYPEWRITTEN_COLOR_MAPPINGS="primary:#B6D6F2;secondary:#FFF0AA;accent:#BBC4B9;notice:#F2D3B6;info_negative:#FE5A59;info_positive:#a9ffb4;info_neutral_1:#F2C3A6;info_neutral_2:#B6D6F2;info_special:#B3FFDE"
+export TYPEWRITTEN_COLORS="host:#FFAAAF;host_user_connector:#BBC4B9;user:#CDFFAA"
+
+# Plugins
+plug "zsh-users/zsh-autosuggestions"
+plug "zap-zsh/supercharge"
+plug "zap-zsh/zap-prompt"
+plug "zsh-users/zsh-syntax-highlighting"
+plug "reobin/typewritten"
+
+# Load and initialise completion system
+autoload -Uz compinit
+compinit
 EOF
+    
+    # Install Zap plugin manager for the user
+    log_info "Installing Zap plugin manager..."
+    sudo -u "$username" sh -c "$(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1" || {
+        log_warn "Failed to install Zap plugin manager, the user can install it manually later"
+    }
+    
+    # Set proper ownership
+    chown -R "$username:$username" "$user_home/.zshrc"
+    chown -R "$username:$username" "$user_home/.local" 2>/dev/null || true
+    
+    log_info "ZSH with Zap plugin manager has been set up for $username"
 }
 
 # Main function
@@ -140,7 +202,6 @@ main() {
     show_banner
 
     # Run setup steps
-    init_pacman
     install_packages
     setup_sudo
     setup_locale

@@ -149,6 +149,7 @@ change_to_zsh() {
 setup_zsh_for_user() {
     local username=$1
     local user_home="/home/$username"
+    local zshrc_path="$user_home/.zshrc"
 
     # Install Zap plugin manager for the user
     log_info "Installing Zap plugin manager..."
@@ -165,54 +166,19 @@ setup_zsh_for_user() {
     log_info "Setting up Zap plugin manager for ZSH..."
     
     # Create initial .zshrc file
-    cat > "$user_home/.zshrc" << 'EOF'
-# Created by Arch Linux WSL post-installer
+    # Check if .zshrc exists
+    if [ -f "$zshrc_path" ]; then
+      # Format a date and time at the time
+      timestamp=$(date +"%Y%m%d-%H%M%S")
+      backup_name=".zshrc-$timestamp.bak"
+      # Move .zshrc to backup
+      mv "$zshrc_path" "$user_home/$backup_name"
+      echo ".zshrc file sent to $backup_name"
+    fi
 
-# Initialize Zap plugin manager
-[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"
-
-# History configuration
-HISTFILE="$HOME/.zsh_history"
-HISTSIZE=10000
-SAVEHIST=10000
-setopt appendhistory
-setopt sharehistory
-setopt incappendhistory
-
-# Key bindings
-bindkey '^[[A' history-beginning-search-backward
-bindkey '^[[B' history-beginning-search-forward
-
-# Aliases
-alias ls='ls --color=auto'
-alias ll='ls -la'
-alias la='ls -a'
-alias grep='grep --color=auto'
-alias python="python3"
-
-# Path additions
-export PATH="$HOME/.local/bin:$PATH"
-export PATH=$PATH:/usr/local/go/bin
-
-# Theme
-export TYPEWRITTEN_PROMPT_LAYOUT="pure_verbose"
-export TYPEWRITTEN_CURSOR="beam"
-export TYPEWRITTEN_SYMBOL="$"
-export TYPEWRITTEN_RELATIVE_PATH="adaptive"
-export TYPEWRITTEN_COLOR_MAPPINGS="primary:#B6D6F2;secondary:#FFF0AA;accent:#BBC4B9;notice:#F2D3B6;info_negative:#FE5A59;info_positive:#a9ffb4;info_neutral_1:#F2C3A6;info_neutral_2:#B6D6F2;info_special:#B3FFDE"
-export TYPEWRITTEN_COLORS="host:#FFAAAF;host_user_connector:#BBC4B9;user:#CDFFAA"
-
-# Plugins
-plug "zsh-users/zsh-autosuggestions"
-plug "zap-zsh/supercharge"
-plug "zap-zsh/zap-prompt"
-plug "zsh-users/zsh-syntax-highlighting"
-plug "reobin/typewritten"
-
-# Load and initialise completion system
-autoload -Uz compinit
-compinit
-EOF
+    # Baixa novo .zshrc com curl (substitua a URL pela desejada)
+    curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/ZSH-Configs/refs/heads/main/.zshrc
+    echo "New .zshrc created!"
 }
 
 # Main function

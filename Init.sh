@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-# Detect if the script is being run from a pipe and re-execute from a temp file
-if [ -t 0 ]; then
-  # Running normally (not from a pipe)
-  :
-else
-  # Running from a pipe; save to temp file and execute
-  tmp_script=$(mktemp)
-  cat > "$tmp_script"
-  chmod +x "$tmp_script"
-  exec "$tmp_script"
-fi
-
 # Set strict error handling
 set -euo pipefail
 IFS=$'\n\t'

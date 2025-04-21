@@ -36,7 +36,7 @@ curl -o ./run.sh https://raw.githubusercontent.com/Thalesevaristo/Arch_config/re
 Execute the script and pray to the Linux gods:
 
 ```bash
-bash ./init.sh
+bash ./run.sh
 ```
 
 Follow the on-screen prompts like they're sacred instructions from the Arch elders.

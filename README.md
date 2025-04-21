@@ -28,7 +28,7 @@ Because how else are you going to download things from the internet like it's 19
 Download our "slightly better than a napkin sketch" installation script:
 
 ```bash
-curl -o ./run.sh https://raw.githubusercontent.com/Thalesevaristo/Arch_config/refs/heads/main/Init.sh
+curl -o ./run.sh https://raw.githubusercontent.com/Thalesevaristo/Arch_config/refs/heads/main/run.sh
 ```
 
 ## Release the Kraken!

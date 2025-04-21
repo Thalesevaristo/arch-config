@@ -1,5 +1,4 @@
-# The "Oh No, I Installed Arch WSL" Script install
-
+# The "Oh No, I Installed Arch WSL" post-install Script 
 So you've decided to brave the waters of Arch on WSL? Congratulations, brave digital explorer! This guide will help you survive the initial setup without losing your sanity (we make no promises beyond that point).
 
 *If you don't like to suffer, just get this version, is way better implemented: https://github.com/typecraft-dev/crucible*

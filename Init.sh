@@ -30,20 +30,20 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 # Display banner
 show_banner() {
     cat << "EOF"
-╔=========================================================╗
-║                                                         ║
-║    █████████   █████  █████ ███████████    ███████      ║
-║   ███░░░░░███ ░░███  ░░███ ░█░░░███░░░█  ███░░░░░███    ║
-║  ░███    ░███  ░███   ░███ ░   ░███  ░  ███     ░░███   ║
-║  ░███████████  ░███   ░███     ░███    ░███      ░███   ║
-║  ░███░░░░░███  ░███   ░███     ░███    ░███      ░███   ║
-║  ░███    ░███  ░███   ░███     ░███    ░░███     ███    ║
-║  █████   █████ ░░████████      █████    ░░░███████░     ║
-║  ░░░░░   ░░░░░   ░░░░░░░░      ░░░░░       ░░░░░░░      ║
-║                                                         ║
-║  The Arch Linux Post-Installer for WSL                  ║
-║  Initial Setup and Config                               ║
-╚=========================================================╝
+╔============================================================╗
+║                                                            ║
+║    ██████████   █████   █████ ████████████    ████████     ║
+║   ███░░░░░░███ ░░███   ░░███ ░█░░░████░░░█  ███░░░░░░███   ║
+║  ░███     ░███  ░███    ░███ ░   ░████  ░  ███      ░░███  ║
+║  ░████████████  ░███    ░███     ░████    ░███       ░███  ║
+║  ░███░░░░░░███  ░███    ░███     ░████    ░███       ░███  ║
+║  ░███     ░███  ░███    ░███     ░████    ░░███      ███   ║
+║  █████    █████ ░░█████████      ██████    ░░░████████░    ║
+║  ░░░░░    ░░░░░   ░░░░░░░░░      ░░░░░░       ░░░░░░░░     ║
+║                                                            ║
+║  The Arch Linux Post-Installer for WSL                     ║
+║  Initial Setup and Config                                  ║
+╚============================================================╝
 EOF
 }
 
@@ -171,18 +171,19 @@ setup_zsh_for_user() {
       # Format a date and time at the time
       timestamp=$(date +"%Y%m%d-%H%M%S")
       backup_name=".zshrc-$timestamp.bak"
-      # Move .zshrc to backup
+      # Change the old .zshrc to backup
       mv "$zshrc_path" "$user_home/$backup_name"
       echo ".zshrc file sent to $backup_name"
     fi
 
-    # Baixa novo .zshrc com curl (substitua a URL pela desejada)
+    # Download the new .zshrc with curl
     curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/ZSH-Configs/refs/heads/main/.zshrc
     echo "New .zshrc created!"
 }
 
 # Main function
 main() {
+    clear
     check_root
     show_banner
 

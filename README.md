@@ -8,7 +8,7 @@ So you've decided to brave the waters of Arch on WSL? Congratulations, brave dig
 After installing Arch WSL (and questioning your life choices), run:
 
 ```bash
-pacman -Syu --no-confirm
+pacman -Syu --noconfirm
 ```
 
 This updates your repositories and packages.
@@ -18,7 +18,7 @@ This updates your repositories and packages.
 Next, install curl with:
 
 ```bash
-pacman -S curl --no-confirm
+pacman -S curl --noconfirm
 ```
 
 Because how else are you going to download things from the internet like it's 1999?

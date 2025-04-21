@@ -2,5 +2,5 @@
 
 curl -o init.sh https://raw.githubusercontent.com/Thalesevaristo/Arch_config/refs/heads/main/Init.sh
 chmod +x init.sh
-sudo bash ./init.sh
+bash ./init.sh
 rm init.sh

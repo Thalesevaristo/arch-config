@@ -152,7 +152,7 @@ setup_zsh_for_user() {
 
     # Install Zap plugin manager for the user
     log_info "Installing Zap plugin manager..."
-    sudo -u "$username" sh -c 'curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh | zsh --branch release-v1' || {
+    sudo -u "$username" sh -c 'zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1' || {
         log_warn "Failed to install Zap plugin manager, the user can install it manually later"
     }
     

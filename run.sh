@@ -56,7 +56,7 @@ install_packages() {
     }
 
     local packages=(
-        sudo nano zsh curl git github-cli python go rust
+        sudo nano nvim zsh fzf curl git github-cli python go rust
     )
     pacman -S "${packages[@]}" --noconfirm || {
         log_error "Failed to install packages"

@@ -6,11 +6,13 @@ IFS=$'\n\t'
 
 # Source utility functions
 source utils.sh
+source user.sh
+source zsh.sh
 
 # Source the package list
 if [ ! -f "packages.conf" ]; then
-  log_error "Error: packages.conf not found!"
-  exit 1
+    log_error "Error: packages.conf not found!"
+    exit 1
 fi
 source packages.conf
 

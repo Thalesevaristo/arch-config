@@ -56,7 +56,7 @@ install_packages() {
     }
 
     local packages=(
-        sudo nano nvim zsh fzf curl less git github-cli python go rust dotnet-sdk
+        sudo openssh nano nvim zsh fzf curl less git github-cli python go rust dotnet-sdk
     )
     pacman -S "${packages[@]}" --noconfirm || {
         log_error "Failed to install packages"

@@ -76,6 +76,28 @@ install_packages() {
 }
 
 # -----------------------
+# Sudo
+# -----------------------
+setup_sudo() {
+    log_info "Installing sudo..."
+    install_packages "sudo"
+    log_info "Configuring sudo..."
+    echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
+    chmod 440 /etc/sudoers.d/wheel
+}
+
+# -----------------------
+# Setup locale
+# -----------------------
+setup_locale() {
+    log_info "Setting up locale..."
+    locale-gen || {
+        log_warn "Locale generation encountered issues"
+    }
+}
+
+
+# -----------------------
 # User
 # -----------------------
 

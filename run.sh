@@ -4,15 +4,17 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Source utility functions
-source utils.sh
+source "$SCRIPT_DIR/utils.sh"
 
 # Source the package list
 if [ ! -f "packages.conf" ]; then
     log_error "Error: packages.conf not found!"
     exit 1
 fi
-source packages.conf
+source "$SCRIPT_DIR/packages.conf"
 
 # Main function
 main() {

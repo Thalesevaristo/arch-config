@@ -19,6 +19,11 @@ source "$SCRIPT_DIR/packages.conf"
 # Main function
 main() {
     clear
+    
+    # Configura sudo e locale
+    setup_sudo
+    setup_locale
+    
     check_root
     show_banner
 
@@ -29,10 +34,6 @@ main() {
     # Instala pacotes básicos
     log_info "Installing required packages..."
     install_packages "${PACKAGES[@]}"
-
-    # Configura sudo e locale
-    setup_sudo
-    setup_locale
 
     # Criação do usuário
     create_user

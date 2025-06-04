@@ -39,16 +39,7 @@ main() {
     create_user
 
     # Instalação e customização opcional do Zsh
-    if prompt_yes_no "Deseja instalar o Zsh?"; then
-        install_packages zsh
-        local username
-        username=$(get_default_user)
-
-        if prompt_yes_no "Deseja aplicar customizações no Zsh (Zap e .zshrc)?"; then
-            change_to_zsh "$username"
-            setup_zsh_for_user "$username"
-        fi
-    fi
+    ask_install_zsh
 
     log_info "Setup completed successfully!"
     log_info "Please restart your WSL instance for changes to take effect."

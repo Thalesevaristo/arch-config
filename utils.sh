@@ -126,7 +126,7 @@ create_user() {
         fi
     done
 
-    GLOBAL_USERNAME "$usernane"
+    GLOBAL_USERNAME="$username"
     log_info "Configuring WSL defaults..."
 
     grep -q "\[boot\]" /etc/wsl.conf || echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf

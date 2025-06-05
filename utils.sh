@@ -126,6 +126,7 @@ create_user() {
         fi
     done
 
+    GLOBAL_USERNAME "$usernane"
     log_info "Configuring WSL defaults..."
 
     grep -q "\[boot\]" /etc/wsl.conf || echo -e "\n[boot]\nsystemd=true" >> /etc/wsl.conf
@@ -150,10 +151,10 @@ install_and_configure_zsh() {
 
     read -rp "Do you want to apply customizations for Zsh (Zap + .zshrc)? (y/N): " customize
     if [[ "$customize" =~ ^[Yy]$ ]]; then
-        setup_zsh_for_user "$username"
+        setup_zsh_for_user "$GLOBAL_USERNAME"
     fi
 
-    change_to_zsh "$username"
+    change_to_zsh "$GLOBAL_USERNAME"
 }
 
 change_to_zsh() {

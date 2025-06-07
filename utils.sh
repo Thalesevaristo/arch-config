@@ -191,6 +191,6 @@ setup_zsh_for_user() {
         echo ".zshrc file backed up as $backup_name"
     fi
 
-    curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/ZSH-Configs/refs/heads/main/.zshrc
+    curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/zsh-configs/refs/heads/main/.zshrc
     echo "New .zshrc created!"
 }

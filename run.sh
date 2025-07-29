@@ -20,23 +20,26 @@ source "$SCRIPT_DIR/packages.conf"
 main() {
     clear
     
-    # Configura sudo e locale
+    # Setup sudo and locale
     setup_sudo
     setup_locale
     
     check_root
     show_banner
 
-    # Atualiza o sistema
+    # Update the system
     log_info "Updating system..."
     sudo pacman -Syu --noconfirm
 
-    # Instala pacotes básicos
+    # Install basic packages
     log_info "Installing required packages..."
     install_packages "${PACKAGES[@]}"
 
-    # Criação do usuário
+    # Create user
     create_user
+
+    # Install UV
+    install_uv
 
     # Instalação e customização opcional do Zsh
     ask_install_zsh

@@ -182,11 +182,6 @@ setup_zsh_for_user() {
     local user_home="/home/$username"
     local zshrc_path="$user_home/.zshrc"
 
-    log_info "Installing Zap plugin manager..."
-    sudo -u "$username" sh -c 'zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1' || {
-        log_warn "Failed to install Zap plugin manager, the user can install it manually later"
-    }
-
     chown -R "$username:$username" "$user_home/.zshrc"
     chown -R "$username:$username" "$user_home/.local" 2>/dev/null || true
 
@@ -198,6 +193,6 @@ setup_zsh_for_user() {
         echo ".zshrc file backed up as $backup_name"
     fi
 
-    curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/zsh-configs/refs/heads/main/.zshrc
+    curl -o "$user_home/.zshrc" https://raw.githubusercontent.com/Thalesevaristo/zsh-config/refs/heads/main/.zshrc
     echo "New .zshrc created!"
 }
